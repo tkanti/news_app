@@ -70,6 +70,7 @@ public class QueryUtils {
         HttpURLConnection urlConnection = null;
         InputStream responseStream = null;
 
+
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod(HTTP_GET);

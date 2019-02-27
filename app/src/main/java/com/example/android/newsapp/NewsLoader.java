@@ -1,6 +1,8 @@
 package com.example.android.newsapp;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
@@ -22,13 +24,31 @@ public class NewsLoader extends AsyncTaskLoader<List<News>> {
     @Override
     public List<News> loadInBackground() {
         List<News> listOfNews = null;
-        try {
-            URL url = QueryUtils.createUrl();
-            String jsonResponse = QueryUtils.makeHttpRequest(url);
-            listOfNews = QueryUtils.parseJson(jsonResponse);
-        } catch (IOException e) {
-            Log.e("Queryutils", "Error Loader LoadInBackground: ", e);
+        if (isConnectingToInternet()) {
+            try {
+                URL url = QueryUtils.createUrl();
+                String jsonResponse = QueryUtils.makeHttpRequest(url);
+                listOfNews = QueryUtils.parseJson(jsonResponse);
+            } catch (IOException e) {
+                Log.e("Queryutils", "Error Loader LoadInBackground: ", e);
+            }
+        }
+        else{
+            Log.e("Queryutils", "No internet connection");
         }
         return listOfNews;
+    }
+
+    private boolean isConnectingToInternet() {
+        ConnectivityManager connectivity = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+        }
+        return false;
     }
 }
