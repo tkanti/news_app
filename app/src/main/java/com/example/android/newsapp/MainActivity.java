@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ public class MainActivity extends AppCompatActivity
     private static NewsAdapter adapter;
     private static int LOADER_ID = 1;
     SwipeRefreshLayout swipe;
+
+    /** TextView that is displayed when the list is empty */
+    private TextView mEmptyStateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +34,16 @@ public class MainActivity extends AppCompatActivity
                 new NewsAdapterOnItemClickListener(this, adapter);
         listView.setOnItemClickListener(listener);
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        listView.setEmptyView(mEmptyStateTextView);
     }
 
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
+        // Set empty state text to display "No earthquakes found."
+        mEmptyStateTextView.setText(R.string.nothing_to_show);
+
         swipe.setRefreshing(false);
         if (data != null) {
             adapter.setNotifyOnChange(false);

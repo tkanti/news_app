@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">News App</string>
+    <string name="nothing_to_show">Nothing to show</string>
 </resources>
