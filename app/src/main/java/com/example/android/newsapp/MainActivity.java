@@ -28,15 +28,16 @@ public class MainActivity extends AppCompatActivity
         swipe.setOnRefreshListener(this);
 
         ListView listView = findViewById(R.id.list_view);
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        listView.setEmptyView(mEmptyStateTextView);
+
+
         adapter = new NewsAdapter(this);
         listView.setAdapter(adapter);
         NewsAdapterOnItemClickListener listener =
                 new NewsAdapterOnItemClickListener(this, adapter);
         listView.setOnItemClickListener(listener);
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
-
-        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
-        listView.setEmptyView(mEmptyStateTextView);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity
             adapter.setNotifyOnChange(false);
             adapter.clear();
             adapter.setNotifyOnChange(true);
-            adapter.addAll(data);
+            /*adapter.addAll(data);*/
         }
     }
 
